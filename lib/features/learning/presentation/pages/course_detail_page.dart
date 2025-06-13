@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
-import '../../domain/entities/course.dart';
+import 'package:untitled3/features/learning/domain/entities/course.dart';
+import 'package:untitled3/features/learning/pallet.dart';
 
 class CourseDetailPage extends StatefulWidget {
   final Course course;
@@ -23,24 +23,22 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     _initializeCamera();
   }
 
-  // Initialize the camera
   Future<void> _initializeCamera() async {
-    // Get list of available cameras
     _cameras = await availableCameras();
 
-    // If cameras are available, initialize the first one
     if (_cameras!.isNotEmpty) {
       _controller = CameraController(_cameras![0], ResolutionPreset.high);
       await _controller!.initialize();
-      setState(() {
-        _isCameraInitialized = true;
-      });
+      if (mounted) {
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      }
     }
   }
 
   @override
   void dispose() {
-    // Dispose the camera controller when the page is disposed
     _controller?.dispose();
     super.dispose();
   }
@@ -57,7 +55,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         color: widget.course.bgcolor,
         child: Column(
           children: [
-            // الصورة الأساسية
             Container(
               height: 200,
               margin: const EdgeInsets.all(20),
@@ -94,7 +91,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                     ),
                     const SizedBox(height: 30),
 
-                    // ✅ صورة إضافية صغيرة
                     if (widget.course.extraImage != null)
                       Container(
                         margin: const EdgeInsets.only(bottom: 20),
@@ -102,7 +98,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black12,
                               blurRadius: 8,
@@ -114,7 +110,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                           borderRadius: BorderRadius.circular(15),
                           child: Image.asset(
                             widget.course.extraImage!,
-                            height: 180, // ✅ تم تقليله
+                            height: 180,
                             width: double.infinity,
                             fit: BoxFit.contain,
                           ),
@@ -125,22 +121,22 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               ),
             ),
 
-            // ✅ أيقونة الكاميرا بأسفل الصفحة
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () {
-                    // فتح الكاميرا
                     if (_isCameraInitialized) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CameraPreviewPage(
-                            controller: _controller!,
-                          ),
+                          builder: (context) => CameraPreviewPage(controller: _controller!),
                         ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Camera is not initialized yet')),
                       );
                     }
                   },
@@ -149,7 +145,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           blurRadius: 6,
@@ -173,7 +169,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   }
 }
 
-// صفحة الكاميرا لعرض الكاميرا عند فتحها
 class CameraPreviewPage extends StatelessWidget {
   final CameraController controller;
 

@@ -18,10 +18,12 @@ class _LearningStartScreenState extends State<LearningStartScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // الخلفية
           Container(
             height: height,
             width: width,
-            decoration: const BoxDecoration(
+
+      decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/asi.jpg'),
                 fit: BoxFit.cover,
@@ -29,17 +31,20 @@ class _LearningStartScreenState extends State<LearningStartScreen> {
             ),
           ),
 
-
+          // زر الرجوع
           Positioned(
             top: 40,
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 30),
               onPressed: () {
-                GoRouter.of(context).go(AppRoute.chatHomePath);
+                GoRouter.of(context).go(AppRoute.home);
+                // الرجوع إلى صفحة HomeScreen
               },
             ),
           ),
+
+          // محتوى الشاشة السفلي
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -52,19 +57,19 @@ class _LearningStartScreenState extends State<LearningStartScreen> {
               child: Column(
                 children: [
                   SizedBox(height: height * 0.07),
-                  CustomText(
+                  const CustomText(
                     text: 'Online Learning Everywhere',
                     size: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
-                  CustomText(
+                  const CustomText(
                     text: 'Learn with pleasure with',
                     size: 15,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                   ),
-                  CustomText(
+                  const CustomText(
                     text: 'us, wherever you are',
                     size: 15,
                     fontWeight: FontWeight.normal,
@@ -73,7 +78,7 @@ class _LearningStartScreenState extends State<LearningStartScreen> {
                   SizedBox(height: height * 0.01),
                   GestureDetector(
                     onTap: () {
-                      GoRouter.of(context).go('/learningHome'); // الانتقال إلى الصفحة المعنية
+                      GoRouter.of(context).go('/learningHome'); // الانتقال إلى HomeScreen
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -109,6 +114,7 @@ class _LearningStartScreenState extends State<LearningStartScreen> {
   }
 }
 
+// ويدجت النص المخصص
 class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
@@ -135,4 +141,5 @@ class CustomText extends StatelessWidget {
     );
   }
 }
+
 

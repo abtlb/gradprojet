@@ -68,7 +68,14 @@ class _AlarmPageState extends State<AlarmPage> {
           title: const Text('Your Alarms', style: TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
           elevation: 4,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back), // سهم العودة
+            onPressed: () {
+              GoRouter.of(context).go(AppRoute.home);  // توجه لصفحة home
+            },
+          ),
         ),
+
         body: BlocBuilder<AlarmListCubit, AlarmListState>(
           builder: (context, state) {
             if (state is AlarmListLoading) {

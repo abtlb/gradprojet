@@ -4,6 +4,7 @@ import 'package:untitled3/features/chat/domain/entities/message.dart';
 import 'package:untitled3/features/chat/presentation/blocs/chat_bloc.dart';
 import 'package:untitled3/features/chat/presentation/blocs/chat_events.dart';
 import 'package:untitled3/features/chat/presentation/blocs/chat_states.dart';
+import 'package:untitled3/features/chat/presentation/views/widgets/ContactInfoPage.dart'; // تأكدي من المسار
 
 class ChatPage extends StatefulWidget {
   final String senderId;
@@ -15,7 +16,8 @@ class ChatPage extends StatefulWidget {
     required this.receiverId,
   });
 
-  @override createState() => _ChatPageState();
+  @override
+  createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -56,7 +58,29 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Chat")),
+      appBar: AppBar(
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ContactInfoPage(
+                  firstName: "Mennaaa",
+                  secondName: "Mhmad",
+                  dateOfBirth: "1998-04-25",
+                ),
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text("Mennaaa Mhmad", style: TextStyle(fontSize: 18)),
+              Text("@menna123", style: TextStyle(fontSize: 13)),
+            ],
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -64,7 +88,7 @@ class _ChatPageState extends State<ChatPage> {
               builder: (context, state) {
                 if (state is ChatLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is ChatMessagesLoadingSuccess) {
+                } else if (state is ChatMessagesLoadingSuccess || state is ChatUpdating) {
                   return ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
@@ -78,30 +102,18 @@ class _ChatPageState extends State<ChatPage> {
                 } else if (state is ChatMessagesLoadingFailure) {
                   return Center(child: Text("Error loading the messages: ${state.error}"));
                 }
-                else if (state is ChatUpdating) {
-                  return ListView.builder(
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      final ChatMessageEntity msg = _messages[index];
-                      return ListTile(
-                        title: Text(msg.message),
-                        subtitle: Text("From: ${msg.sender} at ${msg.time}"),
-                      );
-                    },
-                  );
-                }
                 return const Center(child: Text("No messages yet"));
               },
               listener: (context, state) {
-                if(state is ChatMessagesLoadingSuccess) {
-                  for (var model in state.messages) {
-                    _messages.add(ChatMessageEntity.fromModel(model));
-                  }
-                } else if(state is ChatAddingMessage) {
+                if (state is ChatMessagesLoadingSuccess) {
+                  setState(() {
+                    _messages = state.messages.map(ChatMessageEntity.fromModel).toList();
+                  });
+                } else if (state is ChatAddingMessage) {
+                  setState(() {
                     _messages.add(state.message);
-                    _chatBloc.add(ChatUpdateMessages());
-                    print(_messages);
-                  }
+                  });
+                }
               },
             ),
           ),

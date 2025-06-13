@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:untitled3/core/constants/constants.dart';
-import 'package:untitled3/features/learning/presentation/pages/learning_start_screen.dart';
-import 'package:untitled3/features/learning/domain/entities/course.dart';
-import 'package:untitled3/features/learning/data/data_sources/course_local_data.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled3/features/learning/domain/entities/course.dart';
+import 'package:untitled3/features/learning/pallet.dart';
+import 'package:untitled3/features/learning/presentation/pages/course_detail_page.dart';
+import 'package:untitled3/features/learning/data/data_sources/course_local_data.dart';
 
-class LearningHome extends StatefulWidget {
-  const LearningHome({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<LearningHome> createState() => _LearningHomeState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _LearningHomeState extends State<LearningHome> {
+class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
 
   void onCategorySelected(int index) {
@@ -44,7 +44,6 @@ class _LearningHomeState extends State<LearningHome> {
                     size: 30,
                   ),
                   onPressed: () {
-                    // التنقل إلى صفحة البداية
                     GoRouter.of(context).go('/learningStart');
                   },
                 ),
@@ -57,30 +56,32 @@ class _LearningHomeState extends State<LearningHome> {
               ],
             ),
             SizedBox(height: height * 0.03),
-
-            // الترحيب وصورة الملف الشخصي
             Row(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    CustomText(
-                      size: 28,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      text: 'Hi There',
+                  children: [
+                    const Text(
+                      'Hi There',
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    CustomText(
-                      size: 15,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
-                      text: 'Today is a good day ',
+                    const Text(
+                      'Today is a good day ',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ),
                     ),
-                    CustomText(
-                      size: 15,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
-                      text: 'to learn something new!',
+                    const Text(
+                      'to learn something new!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -108,7 +109,6 @@ class _LearningHomeState extends State<LearningHome> {
               ],
             ),
             SizedBox(height: height * 0.03),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -138,7 +138,6 @@ class _LearningHomeState extends State<LearningHome> {
               ],
             ),
             SizedBox(height: height * 0.03),
-
             Expanded(
               child: MasonryGridView.builder(
                 crossAxisSpacing: 5,
@@ -150,9 +149,11 @@ class _LearningHomeState extends State<LearningHome> {
                   final course = selectedCategory[selectedIndex][index];
                   return GestureDetector(
                     onTap: () {
-                      GoRouter.of(context).go(
-                        '/course_detail',
-                        extra: course,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CourseDetailPage(course: course),
+                        ),
                       );
                     },
                     child: Padding(
@@ -175,15 +176,17 @@ class _LearningHomeState extends State<LearningHome> {
                         child: Column(
                           children: [
                             SizedBox(height: height * 0.02),
-                            CustomText(
-                              size: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              text: course.title,
+                            Text(
+                              course.title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             SizedBox(height: height * 0.02),
                             Center(
-                              child: Container(
+                              child: SizedBox(
                                 height: height * 0.12,
                                 child: Image.asset(course.image),
                               ),
@@ -203,7 +206,6 @@ class _LearningHomeState extends State<LearningHome> {
   }
 }
 
-// زر مخصص
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
@@ -240,11 +242,13 @@ class CustomButton extends StatelessWidget {
             ),
           ],
         ),
-        child: CustomText(
-          size: 15,
-          color: selectedIndex == index ? Colors.white : SecondryColor,
-          fontWeight: FontWeight.bold,
-          text: text,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 15,
+            color: selectedIndex == index ? Colors.white : SecondryColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

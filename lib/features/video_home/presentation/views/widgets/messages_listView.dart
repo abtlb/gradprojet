@@ -38,7 +38,7 @@ class _MessagesListviewState extends State<MessagesListview> {
         }
         else if(state is ChatHomeLoadingConversationsSuccessful)
         {
-            final senderId = state.senderId;
+          final senderId = state.senderId;
           var names = state.conversations.map((c) => c.otherUserId).toList();
           var lastMessages = state.conversations.map((c) => c.lastMessage).toList();
           var lastMessagesTimes = state.conversations.map((c) => c.lastMessageTime).toList();

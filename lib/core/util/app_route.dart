@@ -27,6 +27,7 @@ import '../../features/alarm/presentation/pages/set_alarm_page.dart';
 import '../../features/sound_detection/presentation/pages/sound_alert_page.dart';
 import '../../features/video_home/presentation/views/widgets/TextMagnifierSpeakerScreen.dart';
 
+
 abstract class AppRoute {
   static String welcomePath = '/';
   //todo solve
@@ -50,15 +51,18 @@ abstract class AppRoute {
   static String alarmPath = '/alarm';
   static String setAlarmPath = '/set_alarm';
   static String handTracking = '/handTracking';
+  static const String home = '/home';
 
   static final navigatorKey = GlobalKey<NavigatorState>();
   static final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+
 
 
   static final router = GoRouter(
     observers: [routeObserver],
     navigatorKey: navigatorKey,
     routes: [
+
       GoRoute(path: homePath, builder: (_, __) => const HomePage()),
       GoRoute(path: welcomePath, builder: (_, __) => WelcomeScreen()),
       GoRoute(path: chatHomePath, builder: (_, __) => const HomeView()),
@@ -69,6 +73,10 @@ abstract class AppRoute {
           receiverId: extra['receiverId'],
         );
       }),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => const HomePage(),
+      ),
       GoRoute(path: kSearchPath, builder: (_, __) => const SearchView()),
       GoRoute(path: signInPath, builder: (_, __) => const SignInScreen()),
       GoRoute(path: signUpPath, builder: (_, __) => const SignUpScreen()),
@@ -89,7 +97,8 @@ abstract class AppRoute {
         final extra = state.extra as Map<String, dynamic>;
         return AccountPage(prevPath: extra['prevPath']);
       }),
-      GoRoute(path: learningHome, builder: (_, __) => const LearningHome()),
+      GoRoute(path: learningHome, builder: (_, __) => const HomeScreen()),
+
       GoRoute(path: learningStart, builder: (_, __) => const LearningStartScreen()),
       GoRoute(
         path: magnifierPath,
@@ -113,14 +122,3 @@ abstract class AppRoute {
     ],
   );
 }
-
-
-
-
-
-
-
-
-
-
-
